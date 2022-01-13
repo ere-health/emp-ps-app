@@ -63,7 +63,7 @@ public class MedikationsplanServiceTest {
          FileNotFoundException, KeyStoreException, IOException, KeyManagementException, de.gematik.ws.conn.amts.amtsservice.v1.FaultMessage, FaultMessage, DatatypeConfigurationException {
       JAXBContext jaxbContext = JAXBContext.newInstance(MedikationsPlan.class);
       MedikationsPlan mp = (MedikationsPlan) jaxbContext.createUnmarshaller()
-            .unmarshal(getClass().getResourceAsStream("/Medikationsplan_1.xml"));
+            .unmarshal(getClass().getResourceAsStream("/Medikationsplan_2.xml"));
 
       // CardServicePortType cardService = new CardService(getClass().getResource("/CardService.wsdl"))
       //      .getCardServicePort();

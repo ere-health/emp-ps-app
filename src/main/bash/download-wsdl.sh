@@ -38,10 +38,12 @@ wget https://raw.githubusercontent.com/gematik/api-telematik/OPB4/conn/EventServ
 mv EventService.wsdl conn
 wget https://raw.githubusercontent.com/gematik/api-telematik/OPB4/conn/EventService.xsd
 mv EventService.xsd conn
-wget https://update.kbv.de/ita-update/Verordnungen/Arzneimittel/BMP/BMP_V2.6.zip
+# wget https://update.kbv.de/ita-update/Verordnungen/Arzneimittel/BMP/BMP_V2.6.zip
 mkdir ../xsd
-unzip BMP_V2.6.zip bmp_V2.6.xsd
-rm BMP_V2.6.zip
-mv bmp_V2.6.xsd ../xsd
+#unzip BMP_V2.6.zip bmp_V2.6.xsd
+#rm BMP_V2.6.zip
+# mv bmp_V2.6.xsd ../xsd
+wget https://raw.githubusercontent.com/gematik/api-telematik/OPB4/fa/amtss/AMTS_Document_v1_6.xsd
+mv AMTS_Document_v1_6.xsd ../xsd
 wget https://raw.githubusercontent.com/gematik/api-telematik/OPB4/fa/amtss/AMTS_Einwilligung_Document_v1_0.xsd
 mv AMTS_Einwilligung_Document_v1_0.xsd ../xsd

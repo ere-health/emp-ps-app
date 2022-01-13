@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
 	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" version="1.0">
 	<globalBindings localScoping="toplevel" />
-	<bindings schemaLocation="bmp_V2.6.xsd">
+	<bindings schemaLocation="AMTS_Document_v1_6.xsd">
 		<schemaBindings>
 			<package name="ere.health.emp.bmp" />
 		</schemaBindings>
@@ -116,7 +116,7 @@
 								<bindings node="xs:element[@name='M']">
 									<bindings node="xs:complexType">
 										<class name="Medikation" />
-										<bindings node="xs:sequence/xs:element[@name='W']">
+										<!-- <bindings node="xs:sequence/xs:element[@name='W']">
 											<property name="Wirkstoff" />
 											<bindings node="xs:complexType">
 												<class name="Wirkstoff" />
@@ -127,7 +127,7 @@
 													<property name="Wirkstaerke" />
 												</bindings>
 											</bindings>
-										</bindings>
+										</bindings> 
 										<bindings node="xs:attribute[@name='p']">
 											<property name="Pharmazentralnummer" />
 										</bindings>
@@ -169,26 +169,26 @@
 										</bindings>
 										<bindings node="xs:attribute[@name='x']">
 											<property name="Zusatzzeile" />
-										</bindings>
+										</bindings> -->
 									</bindings>
 								</bindings>
 								<bindings node="xs:element[@name='X']">
 									<bindings node="xs:complexType">
 										<class name="Freitextzeile" />
-										<bindings node="xs:attribute[@name='t']">
+										<!-- <bindings node="xs:attribute[@name='t']">
 											<property name="Freitext" />
-										</bindings>
+										</bindings> -->
 									</bindings>
 								</bindings>
 								<bindings node="xs:element[@name='R']">
 									<bindings node="xs:complexType">
 										<class name="Rezeptur" />
-										<bindings node="xs:attribute[@name='t']">
+										<!--  <bindings node="xs:attribute[@name='t']">
 											<property name="Freitext" />
 										</bindings>
 										<bindings node="xs:attribute[@name='x']">
 											<property name="Zusatzzeile" />
-										</bindings>
+										</bindings> -->
 									</bindings>
 								</bindings>
 							</bindings>
@@ -204,18 +204,22 @@
 				<bindings node="xs:attribute[@name='v']">
 					<property name="Versionsnummer" />
 				</bindings>
+				<!--
 				<bindings node="xs:attribute[@name='p']">
 					<property name="Patchnummer" />
 				</bindings>
+				 -->
 				<bindings node="xs:attribute[@name='U']">
 					<property name="InstanzId" />
 				</bindings>
+				<!-- 
 				<bindings node="xs:attribute[@name='a']">
 					<property name="Seitenzahl" />
 				</bindings>
 				<bindings node="xs:attribute[@name='z']">
 					<property name="Gesamtseitenzahl" />
 				</bindings>
+				 -->
 				<bindings node="xs:attribute[@name='l']">
 					<property name="SprachLaenderkennzeichen" />
 				</bindings>

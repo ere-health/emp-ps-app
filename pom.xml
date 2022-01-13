@@ -88,10 +88,10 @@
 				</executions>
 				<configuration>
 					<xjbSources>
-						<xjbSource>src/main/xsd/bmp_V2.6.xjb</xjbSource>
+						<xjbSource>src/main/xsd/AMTS_Document_v1_6.xjb</xjbSource>
 					</xjbSources>
 					<sources>
-						<source>src/main/xsd/bmp_V2.6.xsd</source>
+						<source>src/main/xsd/AMTS_Document_v1_6.xsd</source>
 						<source>src/main/xsd/AMTS_Einwilligung_Document_v1_0.xsd</source>
 					</sources>
 					<packageName>ere.health.emp.bmp</packageName>
