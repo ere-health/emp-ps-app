@@ -2,23 +2,18 @@ package health.ere.bmp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
@@ -79,7 +74,7 @@ public class MedikationsplanServiceTest {
 
       BindingProvider bp = (BindingProvider) eventService;
       bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            "https://10.0.0.98:443/ws/EventService");
+            "https://localhost/eventservice");
 
       configureBindingProvider(bp);
 
@@ -90,7 +85,7 @@ public class MedikationsplanServiceTest {
 
       BindingProvider bp2 = (BindingProvider) aMTSService;
       bp2.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            "https://10.0.0.98:443/ws/AMTSService");
+            "https://localhost/amtsservice");
 
       configureBindingProvider(bp2);
       
@@ -160,9 +155,9 @@ public class MedikationsplanServiceTest {
 
    private ContextType getContext() {
       ContextType contextType = new ContextType();
-      contextType.setMandantId("Incentergy");
-      contextType.setWorkplaceId("1786_A1");
-      contextType.setClientSystemId("Incentergy");
+      contextType.setMandantId("Mandant1");
+      contextType.setWorkplaceId("Workplace1");
+      contextType.setClientSystemId("ClientID1");
       return contextType;
    }
 
@@ -171,23 +166,16 @@ public class MedikationsplanServiceTest {
          UnrecoverableKeyException, KeyStoreException, KeyManagementException {
       SSLContext sslContext = SSLContext.getInstance("TLS");
 
-      KeyStore ks = KeyStore.getInstance("pkcs12");
-      String connectorTlsCertAuthStorePwd = "U9pRlw8SBfMExkycgNDs";
-      try (InputStream is = new FileInputStream(
-            "/home/manuel/Desktop/RU-Connector-Cert/incentergy_U9pRlw8SBfMExkycgNDs.p12")) {
-         ks.load(is, connectorTlsCertAuthStorePwd.toCharArray());
-         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-         kmf.init(ks, connectorTlsCertAuthStorePwd.toCharArray());
 
-         sslContext.init(kmf.getKeyManagers(), new TrustManager[] { new FakeX509TrustManager() },
-               null);
-      }
+      sslContext.init(null, new TrustManager[] { new FakeX509TrustManager() },
+         null);
+
       if (sslContext != null) {
          bindingProvider.getRequestContext().put("com.sun.xml.ws.transport.https.client.SSLSocketFactory",
                sslContext.getSocketFactory());
       }
       bindingProvider.getRequestContext().put("com.sun.xml.ws.transport.https.client.hostname.verifier",
-            new FakeHostnameVerifier());
+            new FakeHostnameVerifier()); 
    }
 
    /**
