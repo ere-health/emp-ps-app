@@ -1,5 +1,7 @@
 package health.ere.bmp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -21,6 +23,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.BindingProvider;
@@ -41,6 +44,14 @@ import de.gematik.ws.conn.eventservice.wsdl.v7.EventServicePortType;
 import de.gematik.ws.conn.eventservice.wsdl.v7.FaultMessage;
 import ere.health.emp.bmp.Einwilligung;
 import ere.health.emp.bmp.MedikationsPlan;
+/*
+for testing, start KoPS (Konnektorsimulator für Primärsysteme bei eHealth Experts GmbH) with 
+   ./start.sh localhost 8081
+check if it listens on port 80:
+   netstat -an | grep 80
+if it does not listen, start with:
+   sudo ./start.sh localhost 8081
+*/
 
 public class MedikationsplanServiceTest {
 
@@ -57,7 +68,7 @@ public class MedikationsplanServiceTest {
    public void test() throws JAXBException, UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException,
          FileNotFoundException, KeyStoreException, IOException, KeyManagementException, de.gematik.ws.conn.amts.amtsservice.v1.FaultMessage, FaultMessage, DatatypeConfigurationException {
       JAXBContext jaxbContext = JAXBContext.newInstance(MedikationsPlan.class);
-      MedikationsPlan mp = (MedikationsPlan) jaxbContext.createUnmarshaller()
+      MedikationsPlan mpW = (MedikationsPlan) jaxbContext.createUnmarshaller()
             .unmarshal(getClass().getResourceAsStream("/Medikationsplan_2.xml"));
 
       // CardServicePortType cardService = new CardService(getClass().getResource("/CardService.wsdl"))
@@ -74,12 +85,12 @@ public class MedikationsplanServiceTest {
 
       BindingProvider bp = (BindingProvider) eventService;
       bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            "https://localhost/eventservice");
+            "http://localhost/eventservice");
 
       configureBindingProvider(bp);
 
-      String ehcHandle = getFirstCardOfType(eventService, CardTypeType.EGK);
       String hpcHandle = getFirstCardOfType(eventService, CardTypeType.SMC_B);
+      String ehcHandle = getFirstCardOfType(eventService, CardTypeType.EGK);
 
       AMTSServicePortType aMTSService = new AMTSService(getClass().getResource("/AMTSService.wsdl")).getAMTSServicePort();
 
@@ -135,12 +146,22 @@ public class MedikationsplanServiceTest {
       Marshaller mPmarshaller = jaxbContext.createMarshaller();
       
       mPmarshaller.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-15"); 
-      mPmarshaller.marshal(mp, os);
+      mPmarshaller.marshal(mpW, os);
 
-      Holder<Status> status2 = new Holder<>();
-      Holder<Boolean> egkValid2 = new Holder<>();
+      Holder<Status> statusW = new Holder<>();
+      Holder<Boolean> egkValidW = new Holder<>();
       // Write Medikationplan
-      aMTSService.writeMP(ehcHandle, hpcHandle, getContext(), os.toByteArray(), "AMTS-PIN", status2, egkValid2);
+      aMTSService.writeMP(ehcHandle, hpcHandle, getContext(), os.toByteArray(), "AMTS-PIN", statusW, egkValidW);
+
+      Holder<Status> statusR = new Holder<>();
+      Holder<byte[]> dataR = new Holder<>();
+      Holder<Boolean> egkValidR = new Holder<>();
+      Holder<Integer> egkUsageR = new Holder<>();
+      aMTSService.readMP(ehcHandle, hpcHandle, getContext(), "AMTS-PIN", statusR, dataR, egkValidR, egkUsageR);
+      
+      Unmarshaller mPUnmarshaller = jaxbContext.createUnmarshaller();
+      MedikationsPlan mpR = (MedikationsPlan) mPUnmarshaller.unmarshal(new ByteArrayInputStream(dataR.value));
+      assertEquals(mpW.getInstanzId(), mpR.getInstanzId());
    }
 
    private String getFirstCardOfType(EventServicePortType eventService, CardTypeType type) throws FaultMessage {
